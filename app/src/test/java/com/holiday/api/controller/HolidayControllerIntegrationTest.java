@@ -27,6 +27,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * The type Holiday controller integration test.
+ */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -41,13 +44,21 @@ class HolidayControllerIntegrationTest {
     @MockitoBean
     private HolidayService holidayService;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         reset(holidayService);
     }
 
+    /**
+     * Test get past holidays positive case.
+     *
+     * @throws Exception the exception
+     */
     @Test
-    void testGetPastHolidays_PositiveCase() throws Exception {
+    void testGetPastHolidays() throws Exception {
         String countryCode = "US";
         List<Holiday> holidays = List.of(
                 new Holiday(LocalDate.now().minusDays(10), Map.of("US", "Thanksgiving")),
@@ -61,6 +72,11 @@ class HolidayControllerIntegrationTest {
                 .andExpect(jsonPath("$.length()").value(2));
     }
 
+    /**
+     * Test get past holidays no holidays.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testGetPastHolidays_NoHolidays() throws Exception {
         String countryCode = "US";
@@ -71,8 +87,13 @@ class HolidayControllerIntegrationTest {
                 .andExpect(jsonPath("$.length()").value(0));
     }
 
+    /**
+     * Test get holidays count positive case.
+     *
+     * @throws Exception the exception
+     */
     @Test
-    void testGetHolidaysCount_PositiveCase() throws Exception {
+    void testGetHolidaysCount() throws Exception {
         CountryRequest request = new CountryRequest(2024, List.of("US", "CA"));
         Map<String, Long> response = Map.of("US", 5L, "CA", 3L);
 
@@ -86,6 +107,11 @@ class HolidayControllerIntegrationTest {
                 .andExpect(jsonPath("$.CA").value(3));
     }
 
+    /**
+     * Test get holidays count invalid request.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testGetHolidaysCount_InvalidRequest() throws Exception {
         CountryRequest request = new CountryRequest(2024, Collections.emptyList());
@@ -96,11 +122,17 @@ class HolidayControllerIntegrationTest {
                 .andExpect(status().isBadRequest());
     }
 
+    /**
+     * Test get common holidays positive case.
+     *
+     * @throws Exception the exception
+     */
     @Test
-    void testGetCommonHolidays_PositiveCase() throws Exception {
+    void testGetCommonHolidays() throws Exception {
         CountryRequest request = new CountryRequest(2024, List.of("US", "CA"));
         List<Holiday> holidays = List.of(
-                new Holiday(LocalDate.of(2024, 1, 1), Map.of("US", "New Year", "CA", "New Year"))
+                new Holiday(LocalDate.of(2024, 1, 1), Map.of(
+                        "US", "New Year", "CA", "New Year"))
         );
 
         when(holidayService.getCommonHolidays(request)).thenReturn(holidays);
@@ -114,6 +146,11 @@ class HolidayControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].localNames.CA").value("New Year"));
     }
 
+    /**
+     * Test get common holidays invalid request.
+     *
+     * @throws Exception the exception
+     */
     @Test
     void testGetCommonHolidays_InvalidRequest() throws Exception {
         CountryRequest request = new CountryRequest(2024, Collections.emptyList());

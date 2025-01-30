@@ -36,8 +36,10 @@ import static org.mockito.Mockito.spy;
 class HolidayServiceTest {
 
     private final List<Holiday> sampleHolidays = Arrays.asList(
-            new Holiday(LocalDate.of(2025, 12, 25), createHolidayMap("US", "Christmas Day")),
-            new Holiday(LocalDate.of(2025, 1, 1), createHolidayMap("US", "New Year"))
+            new Holiday(LocalDate.of(2025, 12, 25), createHolidayMap(
+                    "US", "Christmas Day")),
+            new Holiday(LocalDate.of(2025, 1, 1), createHolidayMap(
+                    "US", "New Year"))
     );
     @Mock
     private ObjectMapper objectMapper;
@@ -64,7 +66,8 @@ class HolidayServiceTest {
         List<Holiday> pastHolidays = spyService.getPastHolidays("US");
 
         assertThat(pastHolidays).hasSize(3);
-        assertThat(pastHolidays.get(0).getDate()).isEqualTo(LocalDate.of(2025, 1, 1));
+        assertThat(pastHolidays.get(0).getDate()).isEqualTo(LocalDate.of(
+                2025, 1, 1));
     }
 
     /**
@@ -75,7 +78,8 @@ class HolidayServiceTest {
         HolidayService spyService = spy(holidayService);
         doReturn(sampleHolidays).when(spyService).fetchHolidays(anyInt(), anyString());
 
-        Map<String, Long> holidayCount = spyService.getHolidaysCount(new CountryRequest(2025, List.of("US", "BR")));
+        Map<String, Long> holidayCount = spyService.getHolidaysCount(
+                new CountryRequest(2025, List.of("US", "BR")));
 
         assertThat(holidayCount).containsEntry("US", 2L);
         assertThat(holidayCount).containsEntry("BR", 2L);
@@ -88,27 +92,25 @@ class HolidayServiceTest {
     void testGetCommonHolidays_ReturnsCommonHolidays() {
         HolidayService spyService = spy(holidayService);
 
-        // Mock holidays correctly
         List<Holiday> usHolidays = Collections.singletonList(
-                new Holiday(LocalDate.of(2025, 12, 25), Map.of("US", "Christmas Day"), "Christmas Day")
+                new Holiday(LocalDate.of(2025, 12, 25), Map.of(
+                        "US", "Christmas Day"), "Christmas Day")
         );
         List<Holiday> brHolidays = Collections.singletonList(
-                new Holiday(LocalDate.of(2025, 12, 25), Map.of("BR", "Natal"), "Natal")
+                new Holiday(LocalDate.of(2025, 12, 25), Map.of(
+                        "BR", "Natal"), "Natal")
         );
 
         doReturn(usHolidays).when(spyService).fetchHolidays(2025, "US");
         doReturn(brHolidays).when(spyService).fetchHolidays(2025, "BR");
 
-        // Get common holidays for both countries
-        List<Holiday> commonHolidays = spyService.getCommonHolidays(new CountryRequest(2025, List.of("US", "BR")));
+        List<Holiday> commonHolidays = spyService.getCommonHolidays(
+                new CountryRequest(2025, List.of("US", "BR")));
 
-        // Assertions
-        assertThat(commonHolidays).hasSize(1);  // Expecting one common holiday
-
-        // Assert that the localNames Map has the expected entries
+        assertThat(commonHolidays).hasSize(1);
         assertThat(commonHolidays.get(0).getLocalNames())
-                .containsEntry("US", "Christmas Day") // Assert US has Christmas Day
-                .containsEntry("BR", "Natal");       // Assert BR has Natal
+                .containsEntry("US", "Christmas Day")
+                .containsEntry("BR", "Natal");
     }
 
     /**
@@ -117,7 +119,8 @@ class HolidayServiceTest {
     @Test
     void testGetPastHolidays_ReturnsEmptyList_WhenNoPastHolidays() {
         HolidayService spyService = spy(holidayService);
-        doReturn(Collections.emptyList()).when(spyService).fetchHolidays(anyInt(), anyString());
+        doReturn(Collections.emptyList()).when(spyService).fetchHolidays(
+                anyInt(), anyString());
 
         List<Holiday> pastHolidays = spyService.getPastHolidays("US");
 
@@ -131,14 +134,18 @@ class HolidayServiceTest {
     void testGetCommonHolidays_ReturnsEmptyList_WhenNoCommonHolidays() {
         HolidayService spyService = spy(holidayService);
 
-        // Mock holidays for both countries with no common holidays
-        List<Holiday> usHolidays = List.of(new Holiday(LocalDate.of(2025, 12, 25), createHolidayMap("US", "Christmas Day")));
-        List<Holiday> brHolidays = List.of(new Holiday(LocalDate.of(2025, 7, 4), createHolidayMap("BR", "Independence Day")));
+        List<Holiday> usHolidays = List.of(new Holiday(
+                LocalDate.of(2025, 12, 25), createHolidayMap(
+                        "US", "Christmas Day")));
+        List<Holiday> brHolidays = List.of(new Holiday(LocalDate.of(
+                2025, 7, 4), createHolidayMap(
+                        "BR", "Independence Day")));
 
         doReturn(usHolidays).when(spyService).fetchHolidays(2025, "US");
         doReturn(brHolidays).when(spyService).fetchHolidays(2025, "BR");
 
-        List<Holiday> commonHolidays = spyService.getCommonHolidays(new CountryRequest(2025, List.of("US", "BR")));
+        List<Holiday> commonHolidays = spyService.getCommonHolidays(
+                new CountryRequest(2025, List.of("US", "BR")));
 
         assertThat(commonHolidays).isEmpty();
     }
@@ -163,7 +170,8 @@ class HolidayServiceTest {
     @Test
     void testFetchHolidays_ThrowsRuntimeException_OnUnknownError() {
         HolidayService spyService = spy(holidayService);
-        doThrow(new RuntimeException("Unexpected error")).when(spyService).fetchHolidays(2025, "US");
+        doThrow(new RuntimeException("Unexpected error")).when(spyService).fetchHolidays(
+                2025, "US");
 
         assertThatThrownBy(() -> spyService.fetchHolidays(2025, "US"))
                 .isInstanceOf(RuntimeException.class)
