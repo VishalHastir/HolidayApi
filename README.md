@@ -81,8 +81,10 @@ cd holiday-api
 Since this is a **multi-module project**, use the following command to build all modules:
 
 ```sh
-mvn clean install
+mvn clean install -pl '!functional-tests' -am
 ```
+-pl '!functional-test-module' --> Skips the FT module from running tests as the application is not running.
+-am --> Builds dependencies of the skipped module
 
 ### **Step 3: Run the Application**
 
@@ -126,7 +128,7 @@ This will run **Cucumber** feature tests located in:
 functional-tests/src/test/resources/com.holiday.api.cucumber/holiday_api.feature
 ```
 
-You can check html report in **target/cucumber-report.html**
+You can check HTML report in **target/cucumber-report.html**
 
 ---
 
@@ -134,7 +136,7 @@ You can check html report in **target/cucumber-report.html**
 
 #### Refer to `countries.json` in `resources/static` to get valid country codes.
 
-### **1. Get Past Holidays**
+### **1. Get Past 3 Holidays**
 
 **Endpoint:**
 
@@ -220,20 +222,6 @@ The JAR file will be generated inside the `app/target/` directory. Run it using:
 ```sh
 java -jar app/target/holiday-api-0.0.1-SNAPSHOT.jar
 ```
-
----
-
-## **Contributing**
-
-Contributions are welcome! To contribute:
-
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature-branch`)
-3. Commit your changes (`git commit -m "Added new feature"`)
-4. Push the branch (`git push origin feature-branch`)
-5. Open a **Pull Request (PR)**
-
----
 
 ## **License**
 
