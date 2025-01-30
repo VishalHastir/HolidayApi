@@ -47,7 +47,7 @@ holiday-api/
 
 Before running the application, ensure you have:
 
-- **Java 17** or later
+- **Java 21**
 - **Maven 3.6+**
 - **Spring Boot 3.4.2**
 - **Internet access** (required for fetching holidays from an external API)
@@ -56,7 +56,7 @@ Before running the application, ensure you have:
 
 ## **Configuration**
 
-Update the `application.properties` file in the `app` module with the correct API URL.
+Update the `application.yml` file in the `app` module with the correct API URL.
 
 ### **Example (`app/src/main/resources/application.yml`)**
 
