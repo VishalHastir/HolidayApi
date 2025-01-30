@@ -132,6 +132,8 @@ You can check html report in **target/cucumber-report.html**
 
 ## **API Endpoints**
 
+#### Refer to `countries.json` in `resources/static` to get valid country codes.
+
 ### **1. Get Past Holidays**
 
 **Endpoint:**
