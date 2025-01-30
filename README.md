@@ -1,61 +1,148 @@
-# Holiday API - Spring Boot Application
+# **Holiday API - Spring Boot Application**
 
-## Overview
+## **Overview**
 
-This is a Spring Boot application that provides an API to retrieve public holiday information for different countries. It supports the following functionalities:
+This is a **Spring Boot Application** that provides an API to retrieve public holiday information for different
+countries. The project is structured into the following modules:
 
-- Fetch past holidays for a specific country
-- Retrieve the number of holidays for a given year and multiple countries
-- Find common holidays between multiple countries in a given year
+- **`parent`**: The main parent module (Maven Multi-Module Project).
+- **`app`**: The core application module containing the Spring Boot API.
+- **`functional-tests (FT)`**: The module for functional and integration testing using **Cucumber + RestAssured**.
 
-## Prerequisites
+### **Features**
 
-Before running the application, ensure you have the following installed:
+- Fetch past holidays for a specific country.
+- Retrieve the number of holidays for a given year and multiple countries.
+- Find common holidays between multiple countries in a given year.
+
+---
+
+## **Project Structure**
+
+```
+holiday-api/
+│── parent/                     # Parent Module (Maven Multi-Module)
+│   ├── pom.xml                  # Parent POM
+│
+├── app/                         # Application Module
+│   ├── src/main/java/com.holiday.api # Spring Boot Application
+│   ├── src/main/resources       # Configuration files
+│   ├── pom.xml                  # Application-specific dependencies
+│
+├── functional-tests/            # Functional Tests Module
+│   ├── src/test/java/com.holiday.api.cucumber
+│   │   ├── cucumber/steps        # Step Definitions for Cucumber
+│   │   ├── CucumberSpringConfig  # Cucumber Spring Configuration
+│   │   ├── RunCucumberTest       # Cucumber Test Runner
+│   ├── src/test/resources/       # Cucumber Feature Files
+│   │   ├── holiday_api.feature
+│   ├── pom.xml                   # FT-specific dependencies (Cucumber, RestAssured)
+│
+├── pom.xml                      # Main Parent POM
+```
+
+---
+
+## **Prerequisites**
+
+Before running the application, ensure you have:
 
 - **Java 17** or later
 - **Maven 3.6+**
 - **Spring Boot 3.4.2**
-- **Internet access** (required to fetch holidays from an external API)
+- **Internet access** (required for fetching holidays from an external API)
 
-## Configuration
+---
 
-This application requires an external API for fetching holiday data. Update the `application.properties` file with the correct API URL.
+## **Configuration**
 
-### Example `application.properties`:
+Update the `application.properties` file in the `app` module with the correct API URL.
+
+### **Example (`app/src/main/resources/application.yml`)**
 
 ```properties
 holiday.api.url=https://example-holiday-api.com
-server.port=8080
+server.port=8084
 ```
 
-## Running the Application
+---
 
-### 1. Clone the repository
+## **Running the Application**
+
+### **Step 1: Clone the Repository**
 
 ```sh
 git clone https://github.com/your-repository/holiday-api.git
 cd holiday-api
 ```
 
-### 2. Build the application
+### **Step 2: Build the Application**
+
+Since this is a **multi-module project**, use the following command to build all modules:
 
 ```sh
 mvn clean install
 ```
 
-### 3. Run the application
+### **Step 3: Run the Application**
+
+Navigate to the `app` module and start the Spring Boot application:
 
 ```sh
+cd app
 mvn spring-boot:run
 ```
 
-The application should now be running on [**http://localhost:8080**](http://localhost:8080).
+The application will now be running at:  
+👉 **http://localhost:8084**
 
-## API Endpoints
+---
 
-#### Refer to `countries.json` in `resources/static` to get valid country codes.
+## **Running Functional Tests (FT Module)**
 
-### 1. Get Past Holidays
+Functional Tests are written using **Cucumber + RestAssured**.
+
+### **Step 1: Start the Application**
+
+Make sure the `app` module is running before executing tests:
+
+```sh
+cd app
+mvn spring-boot:run
+```
+
+### **Step 2: Run Functional Tests**
+
+Navigate to the `functional-tests` module and execute:
+
+```sh
+cd functional-tests
+mvn test
+```
+
+This will run **Cucumber** feature tests located in:
+
+```
+functional-tests/src/test/resources/com.holiday.api.cucumber/holiday_api.feature
+```
+
+To run a specific feature file:
+
+```sh
+mvn test -Dcucumber.options="src/test/resources/com.holiday.api.cucumber/holiday_api.feature"
+```
+
+To generate an HTML report:
+
+```sh
+mvn test -Dcucumber.options="--plugin html:target/cucumber-report.html"
+```
+
+---
+
+## **API Endpoints**
+
+### **1. Get Past Holidays**
 
 **Endpoint:**
 
@@ -63,23 +150,21 @@ The application should now be running on [**http://localhost:8080**](http://loca
 GET /holidays/past/{countryCode}
 ```
 
-**Description:** Retrieves the last three holidays for the specified country.
-
 **Example:**
 
 ```sh
-curl -X GET "http://localhost:8080/holidays/past/US"
+curl -X GET "http://localhost:8084/holidays/past/US"
 ```
 
-### 2. Get Holidays Count for a Year
+---
+
+### **2. Get Holidays Count for Multiple Countries**
 
 **Endpoint:**
 
 ```
 POST /holidays/count
 ```
-
-**Description:** Retrieves the number of holidays for a given year and multiple countries.
 
 **Request Body:**
 
@@ -93,18 +178,18 @@ POST /holidays/count
 **Example:**
 
 ```sh
-curl -X POST "http://localhost:8080/holidays/count" -H "Content-Type: application/json" -d '{"year": 2025, "countryCodes": ["US", "NL"]}'
+curl -X POST "http://localhost:8084/holidays/count" -H "Content-Type: application/json" -d '{"year": 2025, "countryCodes": ["US", "NL"]}'
 ```
 
-### 3. Get Common Holidays between Multiple Countries
+---
+
+### **3. Get Common Holidays Between Multiple Countries**
 
 **Endpoint:**
 
 ```
 POST /holidays/common
 ```
-
-**Description:** Retrieves holidays that are common between multiple countries in a given year.
 
 **Request Body:**
 
@@ -118,36 +203,41 @@ POST /holidays/common
 **Example:**
 
 ```sh
-curl -X POST "http://localhost:8080/holidays/common" -H "Content-Type: application/json" -d '{"year": 2025, "countryCodes": ["US", "NL", "BR"]}'
+curl -X POST "http://localhost:8084/holidays/common" -H "Content-Type: application/json" -d '{"year": 2025, "countryCodes": ["US", "NL", "BR"]}'
 ```
 
-## Running Tests
+---
 
-This application includes unit tests. To run the tests, use:
+## **Deployment**
 
-```sh
-mvn test
-```
-
-## Deployment
-
-To package the application as a JAR file, run:
+To package the application into a JAR file:
 
 ```sh
 mvn package
 ```
 
-The generated JAR file will be in the `target/` directory. Run it with:
+The JAR file will be generated inside the `app/target/` directory. Run it using:
 
 ```sh
-java -jar target/holiday-api-0.0.1-SNAPSHOT.jar
+java -jar app/target/holiday-api-0.0.1-SNAPSHOT.jar
 ```
 
-## Contributing
+---
 
-If you wish to contribute to this project, feel free to submit a pull request.
+## **Contributing**
 
-## License
+Contributions are welcome! To contribute:
 
-This project is licensed under the MIT License.
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature-branch`)
+3. Commit your changes (`git commit -m "Added new feature"`)
+4. Push the branch (`git push origin feature-branch`)
+5. Open a **Pull Request (PR)**
 
+---
+
+## **License**
+
+This project is licensed under the **MIT License**.
+
+---
