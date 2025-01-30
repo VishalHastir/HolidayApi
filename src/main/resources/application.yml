@@ -1,0 +1,9 @@
+spring:
+  application-name: HolidayApi
+
+server:
+  port: 8084
+
+holiday:
+  api:
+    url: "https://date.nager.at/api/v3/PublicHolidays"
