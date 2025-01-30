@@ -72,7 +72,7 @@ server.port=8084
 ### **Step 1: Clone the Repository**
 
 ```sh
-git clone https://github.com/your-repository/holiday-api.git
+git clone https://github.com/VishalHastir/HolidayApi.git
 cd holiday-api
 ```
 
@@ -126,17 +126,7 @@ This will run **Cucumber** feature tests located in:
 functional-tests/src/test/resources/com.holiday.api.cucumber/holiday_api.feature
 ```
 
-To run a specific feature file:
-
-```sh
-mvn test -Dcucumber.options="src/test/resources/com.holiday.api.cucumber/holiday_api.feature"
-```
-
-To generate an HTML report:
-
-```sh
-mvn test -Dcucumber.options="--plugin html:target/cucumber-report.html"
-```
+You can check html report in **target/cucumber-report.html**
 
 ---
 
@@ -171,7 +161,10 @@ POST /holidays/count
 ```json
 {
   "year": 2025,
-  "countryCodes": ["US", "NL"]
+  "countryCodes": [
+    "US",
+    "NL"
+  ]
 }
 ```
 
@@ -196,7 +189,11 @@ POST /holidays/common
 ```json
 {
   "year": 2025,
-  "countryCodes": ["US", "NL", "BR"]
+  "countryCodes": [
+    "US",
+    "NL",
+    "BR"
+  ]
 }
 ```
 

@@ -2,7 +2,6 @@ package com.holiday.api.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import com.holiday.api.domain.Holiday;
 import com.holiday.api.request.CountryRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -136,10 +135,10 @@ class HolidayServiceTest {
 
         List<Holiday> usHolidays = List.of(new Holiday(
                 LocalDate.of(2025, 12, 25), createHolidayMap(
-                        "US", "Christmas Day")));
+                "US", "Christmas Day")));
         List<Holiday> brHolidays = List.of(new Holiday(LocalDate.of(
                 2025, 7, 4), createHolidayMap(
-                        "BR", "Independence Day")));
+                "BR", "Independence Day")));
 
         doReturn(usHolidays).when(spyService).fetchHolidays(2025, "US");
         doReturn(brHolidays).when(spyService).fetchHolidays(2025, "BR");

@@ -1,6 +1,5 @@
 package com.holiday.api.controller;
 
-import com.holiday.api.controller.HolidayController;
 import com.holiday.api.domain.Holiday;
 import com.holiday.api.request.CountryRequest;
 import com.holiday.api.service.HolidayService;
