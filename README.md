@@ -83,8 +83,8 @@ Since this is a **multi-module project**, use the following command to build all
 ```sh
 mvn clean install -pl '!functional-tests' -am
 ```
--pl '!functional-test-module' --> Skips the FT module from running tests as the application is not running.
--am --> Builds dependencies of the skipped module
+- **-pl '!functional-test-module'**: Skips the FT module from running tests as the application is not running.
+- **-am**: Builds dependencies of the skipped module
 
 ### **Step 3: Run the Application**
 
