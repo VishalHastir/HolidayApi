@@ -45,6 +45,7 @@ public class HolidayService {
      * @return the last 3 holidays
      */
     public List<Holiday> getPastHolidays(String country) {
+        log.info("Fetching last 3 past holidays for country: {}", country);
         List<Holiday> pastHolidays = new ArrayList<>();
         int currentYear = LocalDate.now().getYear();
         LocalDate today = LocalDate.now();
@@ -65,7 +66,9 @@ public class HolidayService {
             if (yearToCheck < currentYear - 100) break;
         }
 
-        return pastHolidays.stream().limit(HolidayConstants.PREVIOUS_HOLIDAYS_COUNT).collect(Collectors.toList());
+         List<Holiday> pastHolidayList = pastHolidays.stream().limit(HolidayConstants.PREVIOUS_HOLIDAYS_COUNT).collect(Collectors.toList());
+         log.info("Found {} past holidays for country: {}", pastHolidayList.size(), country);
+         return pastHolidayList;
     }
 
     /**
@@ -76,7 +79,11 @@ public class HolidayService {
      */
     public Map<String, Long> getHolidaysCount(CountryRequest countryRequest) {
         int year = countryRequest.getYear();
-        return countryRequest.getCountryCodes().parallelStream()
+        List<String> countryCodes = countryRequest.getCountryCodes();
+
+        log.info("Fetching holiday count for year: {} and countries: {}", year, countryCodes);
+
+        return countryCodes.parallelStream()
                 .collect(Collectors.toMap(
                         country -> country,
                         country -> fetchHolidays(year, country).stream()
@@ -106,6 +113,8 @@ public class HolidayService {
         int year = countryRequest.getYear();
         List<String> countryCodes = countryRequest.getCountryCodes();
 
+        log.info("Fetching common holidays for year: {} and countries: {}", year, countryCodes);
+
         Map<LocalDate, Map<String, String>> holidayMap = new HashMap<>();
 
         // Fetch and process holidays for each country
@@ -121,11 +130,14 @@ public class HolidayService {
         }
 
         // Filter common holidays
-        return holidayMap.entrySet().stream()
+        List<Holiday> commonHolidays = holidayMap.entrySet().stream()
                 .filter(entry -> entry.getValue().size() == countryCodes.size()) // Ensure the holiday appears in requested countries
                 .sorted(Map.Entry.comparingByKey()) // Sort by date
                 .map(entry -> new Holiday(entry.getKey(), entry.getValue())) // Create a Holiday object
                 .collect(Collectors.toList());
+
+        log.info("Found {} common holidays for the given countries.", commonHolidays.size());
+        return commonHolidays;
     }
 
 
@@ -137,6 +149,8 @@ public class HolidayService {
      * @return the list
      */
     public List<Holiday> fetchHolidays(int year, String countryCode) {
+        log.debug("Fetching holidays for year: {} and country: {}", year, countryCode);
+
         String uri = apiUrl + "/" + year + "/" + countryCode;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
@@ -148,7 +162,9 @@ public class HolidayService {
 
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            log.debug("Received response with status code: {}", response.statusCode());
         } catch (Exception e) {
+            log.error("Error fetching holidays: {}", e.getMessage());
             throw new RuntimeException("Error fetching holidays: " + e.getMessage());
         }
 
@@ -175,6 +191,7 @@ public class HolidayService {
             return objectMapper.readValue(responseBody, new TypeReference<>() {
             });
         } catch (Exception e) {
+            log.error("Error parsing API response: {}", e.getMessage());
             throw new RuntimeException("Error parsing API response: " + e.getMessage(), e);
         }
     }
